@@ -1,7 +1,11 @@
 class BasicBlock:
 
-    def __init__(self, instructions):
+    def __init__(self):
         #TODO: SET THE ENTRY AND EXIT BLOCK
-        self.entry_block = False
-        self.instructions = instructions
-        self.exit_block = False
+        self.instructions = list()
+
+    def __repr__(self):
+        return "{0}\n".format(self.instructions)
+
+    def add_instruction(self, instruction):
+        self.instructions.append(instruction)

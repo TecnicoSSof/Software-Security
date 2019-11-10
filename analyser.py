@@ -1,5 +1,6 @@
 """ Program root """
 from cfg.ControlFlowGraph import ControlFlowGraph
+from cfg.Instruction import Instruction
 import sys
 import json
 
@@ -7,6 +8,11 @@ import json
 def file_get_contents(filename):
     with open(filename) as f:
         return f.read()
+
+
+def parse_json_to_instructions(json_instructions):
+
+    print(json_instructions)
 
 
 def main(argv):
@@ -19,7 +25,8 @@ def main(argv):
     snippet = json.loads(parsed_snippet)
     rules = json.loads(parsed_rules)
 
-    cfg = ControlFlowGraph(snippet['body'])
+    instructions = Instruction.parse_json_to_instructions(snippet['body'])
+    cfg = ControlFlowGraph(instructions)
 
     # print(rules)
 
