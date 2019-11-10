@@ -9,7 +9,7 @@ class Instruction:
         self.leader = False
 
     def __repr__(self):
-        return "{0} - {1}\n".format(self.ast_type, self.line)
+        return "{0} - {1}".format(self.ast_type, self.line)
 
     def is_condition(self):
         return self.ast_type in self.conditional_ast_operators

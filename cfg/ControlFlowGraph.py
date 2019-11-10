@@ -7,6 +7,15 @@ class ControlFlowGraph:
         self.basicBlocks = list()
         self.get_basic_blocks(instructions)
 
+
+    def __repr__(self):
+        toReturn = '[\n'
+        for x in self.basicBlocks:
+            toReturn += "{0},\n".format(x)
+        toReturn += ']'
+        return toReturn
+
+
     def get_basic_blocks(self, instructions):
 
         # TODO: Append the entry node
@@ -31,4 +40,4 @@ class ControlFlowGraph:
 
         # TODO: Append the exit node
 
-        print(self.basicBlocks)
+        print(self)
