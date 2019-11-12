@@ -9,21 +9,41 @@ def handle_instruction(instruction):
         handleExpr(instruction)
     elif instruction['ast_type'] == "Num":
         print("deal with Num operation here")
-        #handleNum(instruction)
+        handleNum(instruction)
     elif instruction['ast_type'] == "Name":
         print("deal with Name operation here")
-        #handleName(instruction)
+        handleName(instruction)
     elif instruction['ast_type'] == "Assign":
         print("deal with Assign operation here")
-        # handleAssign(instruction)
+        handleAssign(instruction)
+    elif instruction['ast_type'] == "Call":
+        print("deal with Call operation here")
+        handleCall(instruction, instruction['args'])
 
 
 def handleExpr(instruction):
     handle_instruction(instruction['value'])
 
 def handleBinOp(instruction):
-        handle_instruction(instruction['right'])
-        handle_instruction(instruction['left'])
+    handle_instruction(instruction['right'])
+    handle_instruction(instruction['left'])
+
+def handleAssign(instruction):
+    for i in range(len(instruction['targets'])):
+        handle_instruction(instruction['targets'][i])
+    handle_instruction(instruction['value'])
+
+def handleNum(instruction):
+    print("this cannot be tainted, so skip")
+
+def handleName(instruction):
+    print("this is a var: " + instruction['id'])
+
+def handleCall(instruction, args):
+    for i in range(len(args)):
+        handle_instruction(args[i])
+    handle_instruction(instruction['func'])
+
 
 class Searcher:
 
