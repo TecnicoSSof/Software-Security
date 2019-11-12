@@ -39,10 +39,13 @@ def handleNum(instruction):
 def handleName(instruction):
     print("this is a var: " + instruction['id'])
 
+def handleFuncName(instruction):
+    print("this is a function: " + instruction['id'])
+
 def handleCall(instruction, args):
     for i in range(len(args)):
         handle_instruction(args[i])
-    handle_instruction(instruction['func'])
+    handleFuncName(instruction['func'])
 
 
 class Searcher:
