@@ -1,4 +1,6 @@
 """ Program root """
+from searcher.Vulnerability import Vulnerability
+from searcher.Searcher import Searcher
 import sys
 import json
 
@@ -6,6 +8,7 @@ import json
 def file_get_contents(filename):
     with open(filename) as f:
         return f.read()
+
 
 def main(argv):
     # TODO: Place the validations and exception handlers on file reading
@@ -15,10 +18,9 @@ def main(argv):
     parsed_snippet = json.loads(file_get_contents(argv[0]))
     parsed_rules = json.loads(file_get_contents(argv[1]))
 
-    instructions = analyze(parsed_snippet['body'])
-    cfg = ControlFlowGraph(instructions)
+    vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
+    instructions = Searcher(parsed_snippet['body'], vulnerabilities)
 
-    # print(rules)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

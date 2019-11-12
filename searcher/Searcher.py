@@ -1,8 +1,9 @@
 class Searcher:
 
-    def __init__(self, instructions):
+    def __init__(self, instructions, vulnerabilities):
         # Store the found variables as key | value. key is the variable name and value is if it's untainted
         self.variables = dict()
+        self.vulnerabilities = vulnerabilities
         # self.flows = list() we might use this later
 
         for inst in instructions:
