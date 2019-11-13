@@ -22,6 +22,7 @@ def main(argv):
     instructions = Searcher(parsed_snippet['body'], vulnerabilities)
 
     for i in vulnerabilities:
+        print(i.name)
         print(i.variables)
 
 

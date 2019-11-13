@@ -14,7 +14,6 @@ class Searcher:
     # Here we need to make a function for each operation, like binary operations, func calls, etc..
     def handle_instruction(self, instruction):
         if instruction['ast_type'] == "BinOp":
-            print("deal with BinOp operation here")
             return self.handleBinOp(instruction)
         elif instruction['ast_type'] == "Expr":
             return self.handleExpr(instruction)

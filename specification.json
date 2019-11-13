@@ -1,1 +1,172 @@
-{"ast_type":"Module","body":[{"ast_type":"Assign","col_offset":0,"end_col_offset":5,"end_lineno":1,"lineno":1,"targets":[{"ast_type":"Name","col_offset":0,"ctx":{"ast_type":"Store"},"end_col_offset":1,"end_lineno":1,"id":"x","lineno":1}],"type_comment":null,"value":{"ast_type":"Name","col_offset":4,"ctx":{"ast_type":"Load"},"end_col_offset":5,"end_lineno":1,"id":"y","lineno":1}},{"ast_type":"Assign","col_offset":0,"end_col_offset":5,"end_lineno":2,"lineno":2,"targets":[{"ast_type":"Name","col_offset":0,"ctx":{"ast_type":"Store"},"end_col_offset":1,"end_lineno":2,"id":"x","lineno":2}],"type_comment":null,"value":{"ast_type":"Constant","col_offset":4,"end_col_offset":5,"end_lineno":2,"kind":null,"lineno":2,"value":0}},{"ast_type":"Assign","col_offset":0,"end_col_offset":9,"end_lineno":3,"lineno":3,"targets":[{"ast_type":"Name","col_offset":0,"ctx":{"ast_type":"Store"},"end_col_offset":1,"end_lineno":3,"id":"z","lineno":3}],"type_comment":null,"value":{"ast_type":"BinOp","col_offset":4,"end_col_offset":9,"end_lineno":3,"left":{"ast_type":"Name","col_offset":4,"ctx":{"ast_type":"Load"},"end_col_offset":5,"end_lineno":3,"id":"x","lineno":3},"lineno":3,"op":{"ast_type":"Add"},"right":{"ast_type":"Constant","col_offset":8,"end_col_offset":9,"end_lineno":3,"kind":null,"lineno":3,"value":1}}},{"ast_type":"Assign","col_offset":0,"end_col_offset":9,"end_lineno":4,"lineno":4,"targets":[{"ast_type":"Name","col_offset":0,"ctx":{"ast_type":"Store"},"end_col_offset":1,"end_lineno":4,"id":"z","lineno":4}],"type_comment":null,"value":{"ast_type":"BinOp","col_offset":4,"end_col_offset":9,"end_lineno":4,"left":{"ast_type":"Name","col_offset":4,"ctx":{"ast_type":"Load"},"end_col_offset":5,"end_lineno":4,"id":"x","lineno":4},"lineno":4,"op":{"ast_type":"Add"},"right":{"ast_type":"Name","col_offset":8,"ctx":{"ast_type":"Load"},"end_col_offset":9,"end_lineno":4,"id":"y","lineno":4}}}],"type_ignores":[]}
+{
+  "ast_type": "Module",
+  "body": [
+    {
+      "ast_type": "Assign",
+      "col_offset": 0,
+      "end_col_offset": 5,
+      "end_lineno": 1,
+      "lineno": 1,
+      "targets": [
+        {
+          "ast_type": "Name",
+          "col_offset": 0,
+          "ctx": {
+            "ast_type": "Store"
+          },
+          "end_col_offset": 1,
+          "end_lineno": 1,
+          "id": "x",
+          "lineno": 1
+        }
+      ],
+      "type_comment": null,
+      "value": {
+        "ast_type": "Name",
+        "col_offset": 4,
+        "ctx": {
+          "ast_type": "Load"
+        },
+        "end_col_offset": 5,
+        "end_lineno": 1,
+        "id": "y",
+        "lineno": 1
+      }
+    },
+    {
+      "ast_type": "Assign",
+      "col_offset": 0,
+      "end_col_offset": 5,
+      "end_lineno": 2,
+      "lineno": 2,
+      "targets": [
+        {
+          "ast_type": "Name",
+          "col_offset": 0,
+          "ctx": {
+            "ast_type": "Store"
+          },
+          "end_col_offset": 1,
+          "end_lineno": 2,
+          "id": "x",
+          "lineno": 2
+        }
+      ],
+      "type_comment": null,
+      "value": {
+        "ast_type": "Constant",
+        "col_offset": 4,
+        "end_col_offset": 5,
+        "end_lineno": 2,
+        "kind": null,
+        "lineno": 2,
+        "value": 0
+      }
+    },
+    {
+      "ast_type": "Assign",
+      "col_offset": 0,
+      "end_col_offset": 9,
+      "end_lineno": 3,
+      "lineno": 3,
+      "targets": [
+        {
+          "ast_type": "Name",
+          "col_offset": 0,
+          "ctx": {
+            "ast_type": "Store"
+          },
+          "end_col_offset": 1,
+          "end_lineno": 3,
+          "id": "z",
+          "lineno": 3
+        }
+      ],
+      "type_comment": null,
+      "value": {
+        "ast_type": "BinOp",
+        "col_offset": 4,
+        "end_col_offset": 9,
+        "end_lineno": 3,
+        "left": {
+          "ast_type": "Name",
+          "col_offset": 4,
+          "ctx": {
+            "ast_type": "Load"
+          },
+          "end_col_offset": 5,
+          "end_lineno": 3,
+          "id": "x",
+          "lineno": 3
+        },
+        "lineno": 3,
+        "op": {
+          "ast_type": "Add"
+        },
+        "right": {
+          "ast_type": "Constant",
+          "col_offset": 8,
+          "end_col_offset": 9,
+          "end_lineno": 3,
+          "kind": null,
+          "lineno": 3,
+          "value": 1
+        }
+      }
+    },
+    {
+      "ast_type": "Assign",
+      "col_offset": 0,
+      "end_col_offset": 9,
+      "end_lineno": 4,
+      "lineno": 4,
+      "targets": [
+        {
+          "ast_type": "Name",
+          "col_offset": 0,
+          "ctx": {
+            "ast_type": "Store"
+          },
+          "end_col_offset": 1,
+          "end_lineno": 4,
+          "id": "z",
+          "lineno": 4
+        }
+      ],
+      "type_comment": null,
+      "value": {
+        "ast_type": "BinOp",
+        "col_offset": 4,
+        "end_col_offset": 9,
+        "end_lineno": 4,
+        "left": {
+          "ast_type": "Name",
+          "col_offset": 4,
+          "ctx": {
+            "ast_type": "Load"
+          },
+          "end_col_offset": 5,
+          "end_lineno": 4,
+          "id": "x",
+          "lineno": 4
+        },
+        "lineno": 4,
+        "op": {
+          "ast_type": "Add"
+        },
+        "right": {
+          "ast_type": "Name",
+          "col_offset": 8,
+          "ctx": {
+            "ast_type": "Load"
+          },
+          "end_col_offset": 9,
+          "end_lineno": 4,
+          "id": "y",
+          "lineno": 4
+        }
+      }
+    }
+  ],
+  "type_ignores": []
+}
