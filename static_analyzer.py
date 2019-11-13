@@ -21,9 +21,9 @@ def main(argv):
     vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
     instructions = Searcher(parsed_snippet['body'], vulnerabilities)
 
-    for i in vulnerabilities:
-        print(i.name)
-        print(i.variables)
+    # for i in vulnerabilities:
+    #     print(i.name)
+    #     print(i.variables)
 
 
 if __name__ == "__main__":
