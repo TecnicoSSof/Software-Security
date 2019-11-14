@@ -90,9 +90,9 @@ class Searcher:
         for vuln in self.vulnerabilities:
             if func_name in vuln.sanitizers:
                 for arg in handled_args:
-                    any_variable_in_sanitizer_is_tainted = False
+                    # any_variable_in_sanitizer_is_tainted = False
                     if arg in vuln.variables:
-                        any_variable_in_sanitizer_is_tainted = True
+                        # any_variable_in_sanitizer_is_tainted = True
                         # dont make false, make still tainted just add to sanitz
                         # vuln.variables[arg][0] = False
                         vuln.variables[arg] = (vuln.variables[arg][0], vuln.variables[arg][1], func_name)
@@ -125,8 +125,6 @@ class Searcher:
 
     def handle_condition(self, instruction):
         handled_comparison_vars = self.handle_instruction(instruction['test'])
-        handled_vars = []
-
         handled_vars = self.get_new_vars_from_json(instruction, 'body')
         handled_vars.append(self.get_new_vars_from_json(instruction, 'orelse'))
 
@@ -136,7 +134,6 @@ class Searcher:
 
     def handle_loop(self, instruction):
         handled_comparison_vars = self.handle_instruction(instruction['test'])
-
         handled_vars = self.get_new_vars_from_json(instruction, 'body')
 
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
