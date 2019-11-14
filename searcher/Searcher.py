@@ -46,7 +46,12 @@ class Searcher:
     def handle_bin_op(self, instruction):
         part1 = self.handle_instruction(instruction['left'])
         part2 = self.handle_instruction(instruction['right'])
-        return part1 + part2
+        to_return = []
+        if part1 is not None:
+            to_return = part1
+        if part2 is not None:
+            to_return.extend(part2)
+        return to_return
 
     def handle_assign(self, instruction):
         target_vars = []
