@@ -1,11 +1,11 @@
 def print_vulnerability(name, func_name, arg):
-    print('{"vulnerability": "', end="")
+    print('{"vulnerability":"', end="")
     print(name + '",')
-    print('"source": "', end="")
-    print(arg[1] if (arg[1] is not None) else "", end="\"\n")
-    print('"sink": "', end="")
+    print('"source":"', end="")
+    print(arg[1] if (arg[1] is not None) else "", end="\",\n")
+    print('"sink":"', end="")
     print(func_name + '",')
-    print('"sanitizer": "', end="")
+    print('"sanitizer":"', end="")
     print(arg[2] if (arg[2] is not None) else "", end="")
     print('"}')
 
@@ -59,12 +59,15 @@ class Searcher:
             for vuln in self.vulnerabilities:
                 tainted = False
                 var = None
+                current_sanitizer = None
                 for var in used_vars:
                     if (var in vuln.variables and vuln.variables[var][0]) or var in vuln.sources:
                         # assign the new variable state
+                        if(vuln.variables and vuln.variables[var][0]):
+                            current_sanitizer = vuln.variables[var][2]
                         tainted = True
                         break
-                vuln.variables[var_name] = (tainted, var, None)
+                vuln.variables[var_name] = (tainted, var, current_sanitizer)
 
             # if the targets are not yet in the declared variables add them
             if var_name not in self.declared_variables:
