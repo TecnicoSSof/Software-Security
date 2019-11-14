@@ -29,6 +29,8 @@ class Searcher:
             return self.handle_name(instruction)
         elif instruction['ast_type'] == "Assign":
             return self.handle_assign(instruction)
+        elif instruction['ast_type'] == 'While':
+            return self.handle_loop(instruction)
         elif instruction['ast_type'] == "If":
             return self.handle_condition(instruction)
         elif instruction['ast_type'] == "Compare":
@@ -145,7 +147,26 @@ class Searcher:
             for var in handled_comparison_vars:
                 if vuln.variables[var]:
                     any_tainted_variable = True
+            if any_tainted_variable:
+                for var in handled_vars:
+                    vuln.variables[var] = True
 
+    def handle_loop(self, instruction):
+        handled_comparison_vars = self.handle_instruction(instruction['test'])
+        handled_vars = []
+        for instruct in instruction['body']:
+            new_vars = self.handle_instruction(instruct)
+            for var in new_vars:
+                if var not in handled_vars:
+                    handled_vars.append(var)
+
+        # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
+        # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
+        for vuln in self.vulnerabilities:
+            any_tainted_variable = False
+            for var in handled_comparison_vars:
+                if vuln.variables[var]:
+                    any_tainted_variable = True
             if any_tainted_variable:
                 for var in handled_vars:
                     vuln.variables[var] = True
