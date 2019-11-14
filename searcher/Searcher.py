@@ -29,13 +29,19 @@ class Searcher:
             return self.handle_name(instruction)
         elif instruction['ast_type'] == "Assign":
             return self.handle_assign(instruction)
+        elif instruction['ast_type'] == 'While':
+            return self.handle_loop(instruction)
+        elif instruction['ast_type'] == "If":
+            return self.handle_condition(instruction)
+        elif instruction['ast_type'] == "Compare":
+            return self.handle_compare(instruction)
         elif instruction['ast_type'] == "Call":
             return self.handle_call(instruction, instruction['args'])
         elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant":
             return []
 
     def handle_expr(self, instruction):
-        self.handle_instruction(instruction['value'])
+        return self.handle_instruction(instruction['value'])
 
     def handle_bin_op(self, instruction):
         part1 = self.handle_instruction(instruction['left'])
@@ -49,12 +55,13 @@ class Searcher:
                 for vuln in self.vulnerabilities:
                     vuln.variables[var] = (True, var, None)
 
-
     def handle_assign(self, instruction):
+        target_vars = []
         used_vars = self.handle_instruction(instruction['value'])
         self.update_declared_variables_and_taint(used_vars)
         for i in range(len(instruction['targets'])):
             var_name = self.handle_instruction(instruction['targets'][i])[0]
+            target_vars.append(var_name)
             # check if any of the variables are tainted or untainted to assign the new variable state
             for vuln in self.vulnerabilities:
                 tainted = False
@@ -72,6 +79,7 @@ class Searcher:
             # if the targets are not yet in the declared variables add them
             if var_name not in self.declared_variables:
                 self.declared_variables.append(var_name)
+        return target_vars
 
     def handle_name(self, instruction):
         # return the variable name as an array to be handled by the callee functions
@@ -81,10 +89,11 @@ class Searcher:
         handled_args = list()
         for i in range(len(args)):
             handled_args = self.handle_instruction(args[i])
+
         func_name = instruction['func']['id']
         self.update_declared_variables_and_taint(handled_args)
 
-        # check if the func name is a sanitizer, if so, set variables to untainted. todo check if it works
+        # check if the func name is a sanitizer, if so, set variables to untainted.
         for vuln in self.vulnerabilities:
             if func_name in vuln.sanitizers:
                 for arg in handled_args:
@@ -105,3 +114,65 @@ class Searcher:
                         print_vulnerability(vuln.name, func_name, vuln.variables[arg])
 
         return [func_name] + handled_args
+
+    def handle_compare(self, instruction):
+        comparator_variables = []
+        # get variables inside comparators
+        for i in instruction['comparators']:
+            instruction_variables = self.handle_instruction(i)
+            if len(instruction_variables):
+                comparator_variables += instruction_variables
+
+        # get variables inside the left part
+        instruction_variable = self.handle_instruction(instruction['left'])
+        if len(instruction_variable):
+            comparator_variables += instruction_variable
+
+        return comparator_variables
+
+    def handle_condition(self, instruction):
+        handled_comparison_vars = self.handle_instruction(instruction['test'])
+        handled_vars = []
+
+        for instruct in instruction['body']:
+            new_vars = self.handle_instruction(instruct)
+            for var in new_vars:
+                if var not in handled_vars:
+                    handled_vars.append(var)
+
+        for instruct in instruction['orelse']:
+            new_vars = self.handle_instruction(instruct)
+            for var in new_vars:
+                if var not in handled_vars:
+                    handled_vars.append(var)
+
+        # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
+        # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
+        for vuln in self.vulnerabilities:
+            any_tainted_variable = False
+            for var in handled_comparison_vars:
+                if vuln.variables[var]:
+                    any_tainted_variable = True
+            if any_tainted_variable:
+                for var in handled_vars:
+                    vuln.variables[var] = True
+
+    def handle_loop(self, instruction):
+        handled_comparison_vars = self.handle_instruction(instruction['test'])
+        handled_vars = []
+        for instruct in instruction['body']:
+            new_vars = self.handle_instruction(instruct)
+            for var in new_vars:
+                if var not in handled_vars:
+                    handled_vars.append(var)
+
+        # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
+        # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
+        for vuln in self.vulnerabilities:
+            any_tainted_variable = False
+            for var in handled_comparison_vars:
+                if vuln.variables[var]:
+                    any_tainted_variable = True
+            if any_tainted_variable:
+                for var in handled_vars:
+                    vuln.variables[var] = True

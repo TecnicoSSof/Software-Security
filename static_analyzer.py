@@ -21,12 +21,6 @@ def main(argv):
     vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
     Searcher(parsed_snippet['body'], vulnerabilities)
 
-    # for i in vulnerabilities:
-    #     print(i.name)
-    #     print(i.variables)
-
-    #print(searcher.get_vulnerabilities())
-
 
 if __name__ == "__main__":
     main(sys.argv[1:])
