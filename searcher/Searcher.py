@@ -48,13 +48,6 @@ class Searcher:
         part2 = self.handle_instruction(instruction['right'])
         return part1 + part2
 
-    def update_declared_variables_and_taint(self, variables):
-        for var in variables:
-            if var not in self.declared_variables:
-                self.declared_variables.append(var)
-                for vuln in self.vulnerabilities:
-                    vuln.variables[var] = (True, var, None)
-
     def handle_assign(self, instruction):
         target_vars = []
         used_vars = self.handle_instruction(instruction['value'])
@@ -70,7 +63,7 @@ class Searcher:
                 for var in used_vars:
                     if (var in vuln.variables and vuln.variables[var][0]) or var in vuln.sources:
                         # assign the new variable state
-                        if(vuln.variables and vuln.variables[var][0]):
+                        if (vuln.variables and vuln.variables[var][0]):
                             current_sanitizer = vuln.variables[var][2]
                         tainted = True
                         break
@@ -134,37 +127,30 @@ class Searcher:
         handled_comparison_vars = self.handle_instruction(instruction['test'])
         handled_vars = []
 
-        for instruct in instruction['body']:
-            new_vars = self.handle_instruction(instruct)
-            for var in new_vars:
-                if var not in handled_vars:
-                    handled_vars.append(var)
-
-        for instruct in instruction['orelse']:
-            new_vars = self.handle_instruction(instruct)
-            for var in new_vars:
-                if var not in handled_vars:
-                    handled_vars.append(var)
+        handled_vars = self.get_new_vars_from_json(instruction, 'body')
+        handled_vars.append(self.get_new_vars_from_json(instruction, 'orelse'))
 
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
-        self.taintImpliticits(handled_comparison_vars, handled_vars)
+        self.taint_implicits(handled_comparison_vars, handled_vars)
 
     def handle_loop(self, instruction):
         handled_comparison_vars = self.handle_instruction(instruction['test'])
-        handled_vars = []
 
-        for instruct in instruction['body']:
-            new_vars = self.handle_instruction(instruct)
-            for var in new_vars:
-                if var not in handled_vars:
-                    handled_vars.append(var)
+        handled_vars = self.get_new_vars_from_json(instruction, 'body')
 
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
-        self.taintImpliticits(handled_comparison_vars, handled_vars)
+        self.taint_implicits(handled_comparison_vars, handled_vars)
 
-    def taintImpliticits(self, handled_comparison_vars, handled_vars):
+    def update_declared_variables_and_taint(self, variables):
+        for var in variables:
+            if var not in self.declared_variables:
+                self.declared_variables.append(var)
+                for vuln in self.vulnerabilities:
+                    vuln.variables[var] = (True, var, None)
+
+    def taint_implicits(self, handled_comparison_vars, handled_vars):
         for vuln in self.vulnerabilities:
             any_tainted_variable = False
             currentSanitizer = None
@@ -175,3 +161,14 @@ class Searcher:
             if any_tainted_variable:
                 for var in handled_vars:
                     vuln.variables[var] = (True, currentSanitizer, None)
+
+    def get_new_vars_from_json(self, instruction, param):
+        handled_vars = []
+
+        for instruct in instruction[param]:
+            new_vars = self.handle_instruction(instruct)
+            for var in new_vars:
+                if var not in handled_vars:
+                    handled_vars.append(var)
+
+        return handled_vars
