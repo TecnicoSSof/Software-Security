@@ -148,18 +148,12 @@ class Searcher:
 
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
-        for vuln in self.vulnerabilities:
-            any_tainted_variable = False
-            for var in handled_comparison_vars:
-                if vuln.variables[var]:
-                    any_tainted_variable = True
-            if any_tainted_variable:
-                for var in handled_vars:
-                    vuln.variables[var] = True
+        self.taintImpliticits(handled_comparison_vars, handled_vars)
 
     def handle_loop(self, instruction):
         handled_comparison_vars = self.handle_instruction(instruction['test'])
         handled_vars = []
+
         for instruct in instruction['body']:
             new_vars = self.handle_instruction(instruct)
             for var in new_vars:
@@ -168,11 +162,16 @@ class Searcher:
 
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
+        self.taintImpliticits(handled_comparison_vars, handled_vars)
+
+    def taintImpliticits(self, handled_comparison_vars, handled_vars):
         for vuln in self.vulnerabilities:
             any_tainted_variable = False
+            currentSanitizer = None
             for var in handled_comparison_vars:
                 if vuln.variables[var]:
                     any_tainted_variable = True
+                    currentSanitizer = vuln.variables[var][1]
             if any_tainted_variable:
                 for var in handled_vars:
-                    vuln.variables[var] = True
+                    vuln.variables[var] = (True, currentSanitizer, None)
