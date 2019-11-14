@@ -27,6 +27,8 @@ class Searcher:
             return self.handle_expr(instruction)
         elif instruction['ast_type'] == "Name":
             return self.handle_name(instruction)
+        elif instruction['ast_type'] == "Attribute":
+            return self.handle_attribute(instruction)
         elif instruction['ast_type'] == "Assign":
             return self.handle_assign(instruction)
         elif instruction['ast_type'] == 'While':
@@ -68,7 +70,7 @@ class Searcher:
                 for var in used_vars:
                     if (var in vuln.variables and vuln.variables[var][0]) or var in vuln.sources:
                         # assign the new variable state
-                        if (vuln.variables and vuln.variables[var][0]):
+                        if vuln.variables and vuln.variables[var][0]:
                             current_sanitizer = vuln.variables[var][2]
                         tainted = True
                 vuln.variables[var_name] = (tainted, var, current_sanitizer)
@@ -80,16 +82,19 @@ class Searcher:
 
     def handle_name(self, instruction):
         # return the variable name as an array to be handled by the callee functions
-        return [instruction['id']]
+        return instruction['id']
+
+    def handle_attribute(self, instruction):
+        return instruction['value']['id']
 
     def handle_call(self, instruction, args):
         handled_args = list()
         for i in range(len(args)):
             temp = self.handle_instruction(args[i])
-            if temp!=[]:
+            if temp:
                 handled_args.extend(temp)
 
-        func_name = instruction['func']['id']
+        func_name = self.handle_instruction(instruction['func'])
         self.update_declared_variables_and_taint(handled_args)
 
         # check if the func name is a sanitizer, if so, set variables to untainted.
