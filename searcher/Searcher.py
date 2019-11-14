@@ -80,7 +80,9 @@ class Searcher:
     def handle_call(self, instruction, args):
         handled_args = list()
         for i in range(len(args)):
-            handled_args = self.handle_instruction(args[i])
+            temp = self.handle_instruction(args[i])
+            if temp!=[]:
+                handled_args.extend(temp)
 
         func_name = instruction['func']['id']
         self.update_declared_variables_and_taint(handled_args)
