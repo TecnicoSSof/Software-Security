@@ -82,10 +82,10 @@ class Searcher:
 
     def handle_name(self, instruction):
         # return the variable name as an array to be handled by the callee functions
-        return instruction['id']
+        return [instruction['id']]
 
     def handle_attribute(self, instruction):
-        return instruction['value']['id']
+        return [instruction['attr']]
 
     def handle_call(self, instruction, args):
         handled_args = list()
@@ -93,8 +93,7 @@ class Searcher:
             temp = self.handle_instruction(args[i])
             if temp:
                 handled_args.extend(temp)
-
-        func_name = self.handle_instruction(instruction['func'])
+        func_name = self.handle_instruction(instruction['func'])[0]
         self.update_declared_variables_and_taint(handled_args)
 
         # check if the func name is a sanitizer, if so, set variables to untainted.
