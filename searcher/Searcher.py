@@ -126,7 +126,8 @@ class Searcher:
     def handle_condition(self, instruction):
         handled_comparison_vars = self.handle_instruction(instruction['test'])
         handled_vars = self.get_new_vars_from_json(instruction, 'body')
-        handled_vars.append(self.get_new_vars_from_json(instruction, 'orelse'))
+        for var in self.get_new_vars_from_json(instruction, 'orelse'):
+            handled_vars.append(var)
 
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
