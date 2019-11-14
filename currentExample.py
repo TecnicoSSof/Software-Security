@@ -9,4 +9,3 @@ else:
     y = 5
 """
 send_mail_jinja(y)
-
