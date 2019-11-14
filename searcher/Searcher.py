@@ -66,7 +66,6 @@ class Searcher:
                         if (vuln.variables and vuln.variables[var][0]):
                             current_sanitizer = vuln.variables[var][2]
                         tainted = True
-                        break
                 vuln.variables[var_name] = (tainted, var, current_sanitizer)
 
             # if the targets are not yet in the declared variables add them
