@@ -150,14 +150,14 @@ class Searcher:
     def taint_implicits(self, handled_comparison_vars, handled_vars):
         for vuln in self.vulnerabilities:
             any_tainted_variable = False
-            currentSanitizer = None
+            current_sanitizer = None
             for var in handled_comparison_vars:
                 if vuln.variables[var]:
                     any_tainted_variable = True
-                    currentSanitizer = vuln.variables[var][1]
+                    current_sanitizer = vuln.variables[var][1]
             if any_tainted_variable:
                 for var in handled_vars:
-                    vuln.variables[var] = (True, currentSanitizer, None)
+                    vuln.variables[var] = (True, current_sanitizer, None)
 
     def get_new_vars_from_json(self, instruction, param):
         handled_vars = []
