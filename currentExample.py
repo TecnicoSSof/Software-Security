@@ -1,4 +1,3 @@
-x = y
-x = 4
-z = x + 1
-z = x + y
+ola = get()
+send_mail_jinja(ola)
+send_mail_jinja(request)
