@@ -152,13 +152,15 @@ class Searcher:
         for vuln in self.vulnerabilities:
             any_tainted_variable = False
             current_sanitizer = None
+            current_source = None
             for var in handled_comparison_vars:
                 if vuln.variables[var]:
                     any_tainted_variable = True
-                    current_sanitizer = vuln.variables[var][1]
+                    current_source = vuln.variables[var][1]
+                    current_sanitizer = vuln.variables[var][2]
             if any_tainted_variable:
                 for var in handled_vars:
-                    vuln.variables[var] = (True, current_sanitizer, None)
+                    vuln.variables[var] = (True, current_source, current_sanitizer)
 
     def get_new_vars_from_json(self, instruction, param):
         handled_vars = []
