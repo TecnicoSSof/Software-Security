@@ -1,5 +1,13 @@
-from searcher.VulnNode import VulnNode
-from searcher.VulnerabilitySpec import VulnerabilitySpec
+def print_vulnerability(name, source, func_name, used_sanitizers):
+    print('{"vulnerability": "', end="")
+    print(name + '",')
+    print('"source": "', end="")
+    print(source + '",')
+    print('"sink": "', end="")
+    print(func_name + '",')
+    print('"sanitizer": "', end="")
+    print(used_sanitizers if len(used_sanitizers) else "", end="")
+    print('"\n}')
 
 
 class Searcher:
@@ -7,112 +15,87 @@ class Searcher:
     def __init__(self, instructions, vulnerabilities):
         self.vulnerabilities = vulnerabilities
         self.declared_variables = list()
-        self.vulnNodes = list()
-
-        # self.flows = list() we might use this later
 
         for inst in instructions:
             self.handle_instruction(inst)
 
-        print(self.vulnNodes)
-
     # Here we need to make a function for each operation, like binary operations, func calls, etc..
     def handle_instruction(self, instruction):
         if instruction['ast_type'] == "BinOp":
-            return self.handleBinOp(instruction)
+            return self.handle_bin_op(instruction)
         elif instruction['ast_type'] == "Expr":
-            return self.handleExpr(instruction)
-        elif instruction['ast_type'] == "Num":
-            return self.handleNum(instruction)
+            return self.handle_expr(instruction)
         elif instruction['ast_type'] == "Name":
-            return self.handleName(instruction)
+            return self.handle_name(instruction)
         elif instruction['ast_type'] == "Assign":
-            return self.handleAssign(instruction)
+            return self.handle_assign(instruction)
         elif instruction['ast_type'] == "Call":
-            print("deal with Call operation here")
-            return self.handleCall(instruction, instruction['args'])
-        elif instruction['ast_type'] == "Constant":
+            return self.handle_call(instruction, instruction['args'])
+        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant":
             return []
 
-    def handleExpr(self, instruction):
+    def handle_expr(self, instruction):
         self.handle_instruction(instruction['value'])
 
-    def handleBinOp(self, instruction):
+    def handle_bin_op(self, instruction):
         part1 = self.handle_instruction(instruction['left'])
         part2 = self.handle_instruction(instruction['right'])
         return part1 + part2
 
-    def handleAssign(self, instruction):
-        # handling right side
-        used_vars = self.handle_instruction(instruction['value'])
-        for var in used_vars:
-            if var[1] == "var" and var not in self.declared_variables:
+    def update_declared_variables_and_taint(self, variables):
+        for var in variables:
+            if var not in self.declared_variables:
                 self.declared_variables.append(var)
-                vulnList = []
                 for vuln in self.vulnerabilities:
-                    vulnList.append(VulnerabilitySpec(vuln.name, []))
-                self.vulnNodes.append(VulnNode(var, var, vulnList))
+                    vuln.variables[var] = True
 
-        # TODO check if func call is tainted? to taint var
 
-        # handling left
+    def handle_assign(self, instruction):
+        used_vars = self.handle_instruction(instruction['value'])
+        self.update_declared_variables_and_taint(used_vars)
         for i in range(len(instruction['targets'])):
-            taint = False
-            current_var = self.handle_instruction(instruction['targets'][i])[0]
+            var_name = self.handle_instruction(instruction['targets'][i])[0]
             # check if any of the variables are tainted or untainted to assign the new variable state
-
-            for vuln in self.vulnNodes:
+            for vuln in self.vulnerabilities:
+                tainted = False
                 for var in used_vars:
-                    if var == vuln.varName:
-                        taint = True
-                        for vulnIsSelf in self.vulnNodes:
-                            if vulnIsSelf.varName == current_var:
-                                self.vulnNodes.remove(vulnIsSelf)
-                        self.vulnNodes.append(VulnNode(vuln.source, current_var, vuln.vulnerabilies))
+                    if (var in vuln.variables and vuln.variables[var]) or var in vuln.sources:
+                        # assign the new variable state
+                        tainted = True
                         break
+                vuln.variables[var_name] = tainted
 
             # if the targets are not yet in the declared variables add them
-            if current_var not in self.declared_variables:
-                self.declared_variables.append(current_var)
+            if var_name not in self.declared_variables:
+                self.declared_variables.append(var_name)
 
-            #     if not tainted anymore
-            if taint!=True:
-                for vuln in self.vulnNodes:
-                    for var in used_vars:
-                        if var == vuln.varName:
-                            taint = True
-                            self.vulnNodes.remove(vuln)
-
-    def handleNum(self, instruction):
-        print("this cannot be tainted, so skip")
-        return []
-
-    def handleName(self, instruction):
+    def handle_name(self, instruction):
         # return the variable name as an array to be handled by the callee functions
-        return [(instruction['id'], "var")]
+        return [instruction['id']]
 
-    def handleFuncName(self, instruction):
-        return [(instruction['id'], "func")]
-
-    def handleCall(self, instruction, args):
-        handledArgs = list()
+    def handle_call(self, instruction, args):
+        handled_args = list()
         for i in range(len(args)):
-            handledArgs = self.handle_instruction(args[i])
-        funcName = self.handleFuncName(instruction['func'])
-        # for arg in handledArgs:
-        #     if(arg[1]=='var'):
-        #         for node in self.vulnNodes:
-        #             if node.source
-        #         sinks = self.checkSinks(funcName)
+            handled_args = self.handle_instruction(args[i])
+        func_name = instruction['func']['id']
+        self.update_declared_variables_and_taint(handled_args)
 
-        #TODO here sth if funcname is vuln sink then lookup args ???
-        #TODO here sth if funcname is vuln source then tain left? or return name and lookup in assign?
+        # check if the func name is a sanitizer, if so, set variables to untainted. todo check if it works
+        for vuln in self.vulnerabilities:
+            if func_name in vuln.sanitizers:
+                for arg in handled_args:
+                    any_variable_in_sanitizer_is_tainted = False
+                    if arg in vuln.variables:
+                        any_variable_in_sanitizer_is_tainted = True
+                        vuln.variables[arg] = False
+                    # Append into the used sanitizers, needed for output
+                    if any_variable_in_sanitizer_is_tainted:
+                        vuln.used_sanitizers.append(func_name)
 
-    # def checkSinks(self, funcName):
-    #     vulnerabilites = list()
-    #     for vuln in self.vulnerabilities:
-    #         for source in vuln.sinks:
-    #             if funcName == source:
-    #                 vulnerabilites.append((vuln.name, sink))
+            # check if the func name is a sink, if so, check if the arg is tainted, if so, set it as a vulnerability
+            elif func_name in vuln.sinks:
+                for arg in handled_args:
+                    if arg in vuln.variables and vuln.variables[arg]:
+                        print_vulnerability(vuln.name, vuln.source, func_name, vuln.used_sanitizers)
 
-
+        return [func_name] + handled_args

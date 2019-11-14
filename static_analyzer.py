@@ -19,11 +19,13 @@ def main(argv):
     parsed_rules = json.loads(file_get_contents(argv[1]))
 
     vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
-    instructions = Searcher(parsed_snippet['body'], vulnerabilities)
+    Searcher(parsed_snippet['body'], vulnerabilities)
 
     # for i in vulnerabilities:
     #     print(i.name)
     #     print(i.variables)
+
+    #print(searcher.get_vulnerabilities())
 
 
 if __name__ == "__main__":
