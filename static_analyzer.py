@@ -1,4 +1,6 @@
 """ Program root """
+import os
+
 from searcher.Vulnerability import Vulnerability
 from searcher.Searcher import Searcher
 import sys
@@ -19,8 +21,10 @@ def main(argv):
     parsed_rules = json.loads(file_get_contents(argv[1]))
 
     vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
-    instructions = Searcher(parsed_snippet['body'], vulnerabilities)
+    Searcher(parsed_snippet['body'], vulnerabilities)
 
 
 if __name__ == "__main__":
+    myCmd = 'astexport -i currentExample.py > specification.json'
+    os.system(myCmd)
     main(sys.argv[1:])
