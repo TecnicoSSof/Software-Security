@@ -1,4 +1,6 @@
 """ Program root """
+import os
+
 from searcher.Vulnerability import Vulnerability
 from searcher.Searcher import Searcher
 import sys
@@ -23,4 +25,6 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    myCmd = 'astexport -i currentExample.py'
+    os.system(myCmd)
     main(sys.argv[1:])
