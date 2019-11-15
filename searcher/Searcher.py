@@ -100,15 +100,8 @@ class Searcher:
         for vuln in self.vulnerabilities:
             if func_name in vuln.sanitizers:
                 for arg in handled_args:
-                    # any_variable_in_sanitizer_is_tainted = False
                     if arg in vuln.variables:
-                        # any_variable_in_sanitizer_is_tainted = True
-                        # dont make false, make still tainted just add to sanitz
-                        # vuln.variables[arg][0] = False
                         vuln.variables[arg] = (vuln.variables[arg][0], vuln.variables[arg][1], func_name)
-                    # Append into the used sanitizers, needed for output
-                    # if any_variable_in_sanitizer_is_tainted:
-                    #     vuln.used_sanitizers.append(func_name)
 
             # check if the func name is a sink, if so, check if the arg is tainted, if so, set it as a vulnerability
             elif func_name in vuln.sinks:
@@ -156,7 +149,8 @@ class Searcher:
             if var not in self.declared_variables:
                 self.declared_variables.append(var)
                 for vuln in self.vulnerabilities:
-                    vuln.variables[var] = (True, var, None)
+                    if var not in vuln.sinks and var not in vuln.sanitizers:
+                        vuln.variables[var] = (True, var, None)
 
     def taint_implicits(self, handled_comparison_vars, handled_vars):
         for vuln in self.vulnerabilities:
