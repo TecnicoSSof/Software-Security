@@ -25,6 +25,6 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    myCmd = 'astexport -i currentExample.py'
+    myCmd = 'astexport -i currentExample.py > specification.json'
     os.system(myCmd)
     main(sys.argv[1:])
