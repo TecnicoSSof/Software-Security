@@ -21,7 +21,9 @@ class Searcher:
 
     # Here we need to make a function for each operation, like binary operations, func calls, etc..
     def handle_instruction(self, instruction):
-        if instruction['ast_type'] == "BinOp":
+        if instruction['ast_type'] == "UnaryOp":
+            return self.handle_unary_op(instruction)
+        elif instruction['ast_type'] == "BinOp":
             return self.handle_bin_op(instruction)
         elif instruction['ast_type'] == "Expr":
             return self.handle_expr(instruction)
@@ -39,11 +41,16 @@ class Searcher:
             return self.handle_compare(instruction)
         elif instruction['ast_type'] == "Call":
             return self.handle_call(instruction, instruction['args'])
-        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant":
+        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant" or instruction['ast_type'] == "NameConstant":
             return []
+        else:
+            print("VEIO AQUI, ERROR ERROR")
 
     def handle_expr(self, instruction):
         return self.handle_instruction(instruction['value'])
+
+    def handle_unary_op(self, instruction):
+        return self.handle_instruction(instruction['operand'])
 
     def handle_bin_op(self, instruction):
         part1 = self.handle_instruction(instruction['left'])
@@ -135,6 +142,7 @@ class Searcher:
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
         self.taint_implicits(handled_comparison_vars, handled_vars)
+        return handled_vars
 
     def handle_loop(self, instruction):
         handled_comparison_vars = self.handle_instruction(instruction['test'])
