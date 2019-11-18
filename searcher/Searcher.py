@@ -41,7 +41,7 @@ class Searcher:
             return self.handle_compare(instruction)
         elif instruction['ast_type'] == "Call":
             return self.handle_call(instruction, instruction['args'])
-        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant" or instruction['ast_type'] == "NameConstant":
+        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant" or instruction['ast_type'] == "NameConstant" or instruction['ast_type'] == "Str":
             return []
         else:
             print("VEIO AQUI, ERROR ERROR")
