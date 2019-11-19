@@ -2,5 +2,5 @@
   {"vulnerability":"lama",
   "sources":["a"],
   "sanitizers":[],
-  "sinks":["z"]}
+  "sinks":["t"]}
 ]
