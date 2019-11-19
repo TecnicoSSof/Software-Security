@@ -77,7 +77,7 @@ class Searcher:
                 for var in used_vars:
                     if var in vuln.variables and vuln.variables[var][0]:
                         # assign the new variable state
-                        if vuln.variables and vuln.variables[var][0]:
+                        if var in vuln.variables and vuln.variables[var][0]:
                             current_sanitizer = vuln.variables[var][2]
                         tainted = True
                     elif var in vuln.sources:
