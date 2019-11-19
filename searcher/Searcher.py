@@ -42,8 +42,9 @@ class Searcher:
             return self.handle_compare(instruction)
         elif instruction['ast_type'] == "Call":
             return self.handle_call(instruction, instruction['args'])
-        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant" or instruction[
-            'ast_type'] == "NameConstant" or instruction['ast_type'] == "Str":
+        elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant":
+            return []
+        elif instruction['ast_type'] == "NameConstant" or instruction['ast_type'] == "Str":
             return []
         else:
             print("VEIO AQUI, ERROR ERROR")
@@ -82,6 +83,7 @@ class Searcher:
                         tainted = True
                     elif var in vuln.sources:
                         tainted = True
+
                 if not tainted:
                     # here we are going to check if there is any tainted variable on a certain vulnerability on the
                     # conditions it means we are on a conditional context so there can be implicit flows
@@ -114,8 +116,7 @@ class Searcher:
             if temp:
                 handled_args.extend(temp)
         func_name = self.handle_instruction(instruction['func'])[0]
-        self.declared_variables.append(func_name)
-        self.update_declared_variables_and_taint(handled_args)
+        self.update_declared_variables_and_taint(handled_args, func_name)
 
         # check if the func name is a sanitizer, if so, set variables to untainted.
         for vuln in self.vulnerabilities:
@@ -132,6 +133,7 @@ class Searcher:
                 for var_cond in self.current_condition_vars_stack:
                     if (var_cond in vuln.variables and vuln.variables[var_cond][0]) or var_cond in vuln.sources:
                         tainted_condition = True
+
                 if tainted_condition:
                     for arg in handled_args:
                         if arg not in vuln.sanitizers:
@@ -141,8 +143,13 @@ class Searcher:
                     for arg in handled_args:
                         if arg in vuln.variables and vuln.variables[arg][0]:
                             print_vulnerability(vuln.name, func_name, vuln.variables[arg])
+            else:
+                for arg in handled_args:
+                    if arg in vuln.variables and vuln.variables[arg][0]:
+                        vuln.variables[func_name] = (True, func_name, vuln.variables[arg][2])
+                        break
 
-        return [func_name] + handled_args
+        return [func_name]
 
     def handle_compare(self, instruction):
         comparator_variables = []
@@ -169,7 +176,7 @@ class Searcher:
         for instruct in instruction['orelse']:
             new_vars = self.handle_instruction(instruct)
 
-        #print(">> ", self.current_condition_vars_stack)
+        # print(">> ", self.current_condition_vars_stack)
         # TODO PLACE THIS IN ASSIGNS AND FUNCTION CALLS
         # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
         # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
@@ -190,7 +197,13 @@ class Searcher:
         for i in handled_comparison_vars: self.current_condition_vars_stack.pop()
         return []
 
-    def update_declared_variables_and_taint(self, variables):
+    def update_declared_variables_and_taint(self, variables, func_name=None):
+        if len(variables) == 0 or func_name is not None:
+            self.declared_variables.append(func_name)
+            for vuln in self.vulnerabilities:
+                if func_name in vuln.sources:
+                    vuln.variables[func_name] = (True, func_name, None)
+
         for var in variables:
             if var not in self.declared_variables:
                 self.declared_variables.append(var)
