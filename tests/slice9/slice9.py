@@ -5,4 +5,3 @@ while indarg == nis  :
       q=q + "xpto1"
       indarg = t(indarg)
 q=w(koneksi,q)
-
