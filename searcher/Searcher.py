@@ -80,7 +80,6 @@ class Searcher:
                         if vuln.variables and vuln.variables[var][0]:
                             current_sanitizer = vuln.variables[var][2]
                         tainted = True
-
                 if not tainted:
                     # here we are going to check if there is any tainted variable on a certain vulnerability on the
                     # conditions it means we are on a conditional context so there can be implicit flows
@@ -111,6 +110,7 @@ class Searcher:
             if temp:
                 handled_args.extend(temp)
         func_name = self.handle_instruction(instruction['func'])[0]
+        self.declared_variables.append(func_name)
         self.update_declared_variables_and_taint(handled_args)
 
         # check if the func name is a sanitizer, if so, set variables to untainted.
