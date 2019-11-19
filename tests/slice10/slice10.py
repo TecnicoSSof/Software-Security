@@ -6,4 +6,3 @@ while indarg == "":
       arg1 = nis
       indarg = s(indarg,1)
 q=x(query)
-
