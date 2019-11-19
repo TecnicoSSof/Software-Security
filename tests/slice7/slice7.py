@@ -5,4 +5,3 @@ if indarg == d(koneksi):
 else:
    q="xpto1" + indarg + "xpto2"
 q=w(q,koneksi)
-

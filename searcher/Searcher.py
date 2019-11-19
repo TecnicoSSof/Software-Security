@@ -75,17 +75,21 @@ class Searcher:
                 var = None
                 current_sanitizer = None
                 for var in used_vars:
-                    if (var in vuln.variables and vuln.variables[var][0]) or var in vuln.sources:
+                    if var in vuln.variables and vuln.variables[var][0]:
                         # assign the new variable state
                         if vuln.variables and vuln.variables[var][0]:
                             current_sanitizer = vuln.variables[var][2]
+                        tainted = True
+                    elif var in vuln.sources:
                         tainted = True
                 if not tainted:
                     # here we are going to check if there is any tainted variable on a certain vulnerability on the
                     # conditions it means we are on a conditional context so there can be implicit flows
                     for var_cond in self.current_condition_vars_stack:
-                        if (var_cond in vuln.variables and vuln.variables[var_cond][0]) or var_cond in vuln.sources:
+                        if var_cond in vuln.variables and vuln.variables[var_cond][0]:
                             current_sanitizer = vuln.variables[var_cond][2]
+                            tainted = True
+                        elif var_cond in vuln.sources:
                             tainted = True
                     vuln.variables[var_name] = (tainted, var_name, current_sanitizer)
                 else:
