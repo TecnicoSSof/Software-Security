@@ -16,9 +16,9 @@ class TestClass(unittest.TestCase):
         return toret
 
     def test_1(self):
-        parsed_snippet = json.loads(file_get_contents(os.getcwd() + "\\tests\\test1.json"))
+        parsed_snippet = json.loads(file_get_contents(os.getcwd() + "/tests/test1.json"))
         parsed_rules = json.loads(file_get_contents("rules.json"))
-        output = open(os.getcwd() + "\\tests\\test1.out", "r")
+        output = open(os.getcwd() + "/tests/test1.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
         self.assertEqual(self.getStr(s.output), output.read(), "Should be equal")
