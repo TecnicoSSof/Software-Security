@@ -7,7 +7,7 @@ import json
 from static_analyzer import file_get_contents
 
 
-class TestSlice1(unittest.TestCase):
+class TestSlice3(unittest.TestCase):
 
     def test_rules(self):
         parsed_snippet = json.loads(file_get_contents(os.getcwd() + "/tests/slice3/slice3.json"))

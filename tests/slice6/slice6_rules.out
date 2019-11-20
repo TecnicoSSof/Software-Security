@@ -2,3 +2,7 @@
 "source":"t",
 "sink":"z",
 "sanitizer":""}
+{"vulnerability":"lama",
+"source":"a",
+"sink":"z",
+"sanitizer":""}
