@@ -37,12 +37,14 @@ class Searcher:
             return self.handle_compare(instruction)
         elif instruction['ast_type'] == "Call":
             return self.handle_call(instruction, instruction['args'])
+        elif instruction['ast_type'] == "Tuple":
+            return self.handle_tuple(instruction)
         elif instruction['ast_type'] == "Num" or instruction['ast_type'] == "Constant":
             return []
         elif instruction['ast_type'] == "NameConstant" or instruction['ast_type'] == "Str":
             return []
         else:
-            print("VEIO AQUI, ERROR ERROR")
+            print("Something went wrong the unsupported type of operation: " + instruction['ast_type'])
 
     def print_vulnerability(self, name, func_name, arg):
         to_return = '{"vulnerability":"' + name + '",\n' + '"source":"'
@@ -211,6 +213,14 @@ class Searcher:
         # remove from the used variables on stack = self.current_condition_vars_stack
         for i in handled_comparison_vars: self.current_condition_vars_stack.pop()
         return []
+
+    def handle_tuple(self, instruction):
+        to_return = []
+        for ins in instruction['elts']:
+            handled = self.handle_instruction(ins)
+            if handled is not None:
+                to_return.extend(handled)
+        return to_return
 
     def update_declared_variables_and_taint(self, variables, func_name=None):
         if len(variables) == 0 or func_name is not None:

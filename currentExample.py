@@ -1,5 +1,6 @@
-nis=0
-koneksi=0
-nis=a('nis')
-q="xpto1" + nis + "xpto2"
-z(koneksi,q)
+query_string = 'SELECT * FROM ionosphere'
+from_timestamp = request.args.get('from_timestamp', None)
+new_query_string = '%s AND anomaly_timestamp >= %s' % (query_string, from_timestamp,ssss, ssss)
+query_string = new_query_string
+stmt = query_string
+it = engine.execute(stmt)
