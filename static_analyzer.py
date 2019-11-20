@@ -2,7 +2,7 @@
 import os
 
 from searcher.Vulnerability import Vulnerability
-from searcher.Searcher import Searcher
+from searcher.Searcher import Searcher, getStr
 import sys
 import json
 
@@ -11,11 +11,6 @@ def file_get_contents(filename):
     with open(filename) as f:
         return f.read()
 
-def getStr(list):
-    toret = ""
-    for x in list:
-        toret += x + "\n"
-    return toret
 
 def main(argv):
     # TODO: Place the validations and exception handlers on file reading

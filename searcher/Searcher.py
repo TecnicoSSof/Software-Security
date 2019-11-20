@@ -1,3 +1,9 @@
+def getStr(list):
+    toret = ""
+    for x in list:
+        toret += x + "\n"
+    return toret
+
 class Searcher:
 
     def __init__(self, instructions, vulnerabilities):
