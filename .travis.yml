@@ -7,14 +7,16 @@ python:
 #  - pip install .
 # command to run
 script:
-  python TestOurTests.py
-  python TestSlice1.py
-  python TestSlice2.py
-  python TestSlice3.py
-  python TestSlice4.py
-  python TestSlice5.py
-  python TestSlice6.py
-#  python TestSlice7.py
+  - python TestOurTests.py
+  - python TestSlice1.py
+  - python TestSlice2.py
+  - python TestSlice3.py
+  - python TestSlice4.py
+  - python TestSlice5.py
+  - python TestSlice6.py
+  - python TestSlice7.py
 #  python TestSlice8.py
 #  python TestSlice9.py
 #  python TestSlice10.py
+#  python TestSlice11.py
+#  python TestSlice12.py
