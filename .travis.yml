@@ -15,8 +15,8 @@ script:
   - python TestSlice5.py
   - python TestSlice6.py
   - python TestSlice7.py
-#  python TestSlice8.py
-#  python TestSlice9.py
-#  python TestSlice10.py
-#  python TestSlice11.py
-#  python TestSlice12.py
+  - python TestSlice8.py
+  - python TestSlice9.py
+  - python TestSlice10.py
+  - python TestSlice11.py
+  - python TestSlice12.py
