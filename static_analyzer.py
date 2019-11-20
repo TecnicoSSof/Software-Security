@@ -11,6 +11,11 @@ def file_get_contents(filename):
     with open(filename) as f:
         return f.read()
 
+def getStr(list):
+    toret = ""
+    for x in list:
+        toret += x + "\n"
+    return toret
 
 def main(argv):
     # TODO: Place the validations and exception handlers on file reading
@@ -21,7 +26,8 @@ def main(argv):
     parsed_rules = json.loads(file_get_contents(argv[1]))
 
     vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
-    Searcher(parsed_snippet['body'], vulnerabilities)
+    s = Searcher(parsed_snippet['body'], vulnerabilities)
+    print(getStr(s.output))
 
 
 if __name__ == "__main__":
