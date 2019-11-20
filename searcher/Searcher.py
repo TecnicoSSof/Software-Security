@@ -123,7 +123,7 @@ class Searcher:
             if func_name in vuln.sanitizers:
                 for arg in handled_args:
                     if arg in vuln.variables:
-                        vuln.variables[arg] = (False, vuln.variables[arg][1], func_name)
+                        vuln.variables[arg] = (vuln.variables[arg][0], vuln.variables[arg][1], func_name)
 
             # check if the func name is a sink, if so, check if the arg is tainted, if so, set it as a vulnerability
             elif func_name in vuln.sinks:
@@ -149,7 +149,7 @@ class Searcher:
                         vuln.variables[func_name] = (True, func_name, vuln.variables[arg][2])
                         break
 
-        return [func_name]
+        return [func_name] + handled_args
 
     def handle_compare(self, instruction):
         comparator_variables = []
