@@ -1,21 +1,10 @@
-def print_vulnerability(name, func_name, arg):
-    print('{"vulnerability":"', end="")
-    print(name + '",')
-    print('"source":"', end="")
-    print(arg[1] if (arg[1] is not None) else "", end="\",\n")
-    print('"sink":"', end="")
-    print(func_name + '",')
-    print('"sanitizer":"', end="")
-    print(arg[2] if (arg[2] is not None) else "", end="")
-    print('"}')
-
-
 class Searcher:
 
     def __init__(self, instructions, vulnerabilities):
         self.vulnerabilities = vulnerabilities
         self.declared_variables = list()
         self.current_condition_vars_stack = list()
+        self.output = list()
 
         for inst in instructions:
             self.handle_instruction(inst)
@@ -48,6 +37,26 @@ class Searcher:
             return []
         else:
             print("VEIO AQUI, ERROR ERROR")
+
+    def print_vulnerability(self, name, func_name, arg):
+        to_return = '{"vulnerability":"' + name + '",\n' + '"source":"'
+        if arg[1] is not None:
+            to_return = to_return + arg[1]
+        to_return = to_return + "\",\n" + '"sink":"' + func_name + '",\n' + '"sanitizer":"'
+        if arg[2] is not None:
+            to_return = to_return + arg[2]
+        to_return = to_return + '"}'
+        self.output.append(to_return)
+        # print(to_return)
+        # print('{"vulnerability":"', end="")
+        # print(name + '",')
+        # print('"source":"', end="")
+        # print(arg[1] if (arg[1] is not None) else "", end="\",\n")
+        # print('"sink":"', end="")
+        # print(func_name + '",')
+        # print('"sanitizer":"', end="")
+        # print(arg[2] if (arg[2] is not None) else "", end="")
+        # print('"}')
 
     def handle_expr(self, instruction):
         return self.handle_instruction(instruction['value'])
@@ -137,12 +146,12 @@ class Searcher:
                 if tainted_condition:
                     for arg in handled_args:
                         if arg not in vuln.sanitizers:
-                            print_vulnerability(vuln.name, func_name, vuln.variables[arg])
+                            self.print_vulnerability(vuln.name, func_name, vuln.variables[arg])
                             break
                 else:
                     for arg in handled_args:
                         if arg in vuln.variables and vuln.variables[arg][0]:
-                            print_vulnerability(vuln.name, func_name, vuln.variables[arg])
+                            self.print_vulnerability(vuln.name, func_name, vuln.variables[arg])
             else:
                 for arg in handled_args:
                     if arg in vuln.variables and vuln.variables[arg][0]:
