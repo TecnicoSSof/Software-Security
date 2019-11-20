@@ -92,11 +92,14 @@ class Searcher:
                 tainted = False
                 var = None
                 current_sanitizer = None
+                current_taint = None
                 for var in used_vars:
                     if var in vuln.variables and vuln.variables[var][0]:
                         # assign the new variable state
                         if var in vuln.variables and vuln.variables[var][0]:
                             current_sanitizer = vuln.variables[var][2]
+                            if vuln.variables[var][1] is not None:
+                                current_taint = vuln.variables[var][1]
                         tainted = True
                     elif var in vuln.sources:
                         tainted = True
@@ -112,7 +115,11 @@ class Searcher:
                             tainted = True
                     vuln.variables[var_name] = (tainted, var_name, current_sanitizer)
                 else:
-                    vuln.variables[var_name] = (tainted, var, current_sanitizer)
+                    if current_taint is not None:
+                        vuln.variables[var_name] = (tainted, current_taint, current_sanitizer)
+                    else:
+                        vuln.variables[var_name] = (tainted, var, current_sanitizer)
+
 
             # if the targets are not yet in the declared variables add them
             if var_name not in self.declared_variables:
@@ -155,7 +162,6 @@ class Searcher:
                     for arg in handled_args:
                         if arg not in vuln.sanitizers:
                             self.print_vulnerability(vuln.name, func_name, vuln.variables[arg])
-                            break
                 else:
                     for arg in handled_args:
                         if arg in vuln.variables and vuln.variables[arg][0]:
@@ -164,7 +170,6 @@ class Searcher:
                 for arg in handled_args:
                     if arg in vuln.variables and vuln.variables[arg][0]:
                         vuln.variables[func_name] = (True, func_name, vuln.variables[arg][2])
-                        break
 
         return [func_name] + handled_args
 

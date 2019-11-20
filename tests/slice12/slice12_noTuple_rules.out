@@ -1,4 +1,4 @@
 {"vulnerability":"SQL injection",
-"source":"query_string",
+"source":"get",
 "sink":"execute",
 "sanitizer":""}
