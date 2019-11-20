@@ -11,6 +11,7 @@ def file_get_contents(filename):
     with open(filename) as f:
         return f.read()
 
+
 def main(argv):
     # TODO: Place the validations and exception handlers on file reading
     # First parameter which is the code snippet in json format

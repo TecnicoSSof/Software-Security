@@ -36,5 +36,6 @@ class TestSlice3(unittest.TestCase):
         self.assertEqual(getStr(s.output), output.read(), "Should be equal")
         output.close()
 
+
 if __name__ == '__main__':
     unittest.main()

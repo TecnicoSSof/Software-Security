@@ -7,7 +7,7 @@ import json
 from static_analyzer import file_get_contents
 
 
-class TestClass(unittest.TestCase):
+class TestOurTests(unittest.TestCase):
 
     def test_1(self):
         parsed_snippet = json.loads(file_get_contents(os.getcwd() + "/tests/ourTests/test1.json"))
@@ -98,6 +98,7 @@ class TestClass(unittest.TestCase):
         s = Searcher(parsed_snippet['body'], vulnerabilities)
         self.assertEqual(getStr(s.output), output.read(), "Should be equal")
         output.close()
+
 
 if __name__ == '__main__':
     unittest.main()
