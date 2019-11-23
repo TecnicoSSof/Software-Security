@@ -1,6 +1,6 @@
 [
   {"vulnerability":"lama",
-  "sources":["koneksi"],
+  "sources":["b"],
   "sanitizers":[],
-  "sinks":["y"]}
+  "sinks":["z"]}
 ]

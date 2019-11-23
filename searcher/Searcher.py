@@ -120,7 +120,6 @@ class Searcher:
                     else:
                         vuln.variables[var_name] = (tainted, var, current_sanitizer)
 
-
             # if the targets are not yet in the declared variables add them
             if var_name not in self.declared_variables:
                 self.declared_variables.append(var_name)
@@ -193,16 +192,10 @@ class Searcher:
         self.current_condition_vars_stack += handled_comparison_vars
 
         for instruct in instruction['body']:
-            new_vars = self.handle_instruction(instruct)
+            self.handle_instruction(instruct)
 
         for instruct in instruction['orelse']:
-            new_vars = self.handle_instruction(instruct)
-
-        # print(">> ", self.current_condition_vars_stack)
-        # TODO PLACE THIS IN ASSIGNS AND FUNCTION CALLS
-        # if any of the tested variables is tainted, it may be possible to exist an implicit flow. its better to warn
-        # them, than if not warn them, so it may produce false positives. There are no perfect tools :D
-        # self.taint_implicits(handled_comparison_vars, [])
+            self.handle_instruction(instruct)
 
         # remove from the used variables on stack = self.current_condition_vars_stack
         for i in handled_comparison_vars: self.current_condition_vars_stack.pop()
@@ -240,17 +233,3 @@ class Searcher:
                 for vuln in self.vulnerabilities:
                     if var not in vuln.sinks and var not in vuln.sanitizers:
                         vuln.variables[var] = (True, var, None)
-
-    def taint_implicits(self, handled_comparison_vars, handled_vars):
-        for vuln in self.vulnerabilities:
-            any_tainted_variable = False
-            current_sanitizer = None
-            current_source = None
-            for var in handled_comparison_vars:
-                if vuln.variables[var] and vuln.variables[var][0]:
-                    any_tainted_variable = True
-                    current_source = vuln.variables[var][1]
-                    current_sanitizer = vuln.variables[var][2]
-            if any_tainted_variable:
-                for var in handled_vars:
-                    vuln.variables[var] = (True, current_source, current_sanitizer)
