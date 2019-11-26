@@ -1,7 +1,7 @@
 import os
 import unittest
 from searcher.Vulnerability import Vulnerability
-from searcher.Searcher import Searcher, getStr
+from searcher.Searcher import Searcher
 import json
 
 from static_analyzer import file_get_contents
@@ -15,7 +15,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test1.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_2(self):
@@ -24,7 +24,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test2.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_3(self):
@@ -33,7 +33,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test3.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_4(self):
@@ -42,7 +42,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test4.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_5(self):
@@ -51,7 +51,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test5.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_6(self):
@@ -60,7 +60,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test6.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_7(self):
@@ -69,7 +69,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test7.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_8(self):
@@ -78,7 +78,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test8.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_9(self):
@@ -87,7 +87,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test9.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_10(self):
@@ -96,7 +96,7 @@ class TestOurTests(unittest.TestCase):
         output = open(os.getcwd() + "/tests/ourTests/test10.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
 

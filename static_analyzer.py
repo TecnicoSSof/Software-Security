@@ -2,7 +2,7 @@
 import os
 
 from searcher.Vulnerability import Vulnerability
-from searcher.Searcher import Searcher, getStr
+from searcher.Searcher import Searcher
 import sys
 import json
 
@@ -18,7 +18,7 @@ def main(argv):
 
     vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
     s = Searcher(parsed_snippet['body'], vulnerabilities)
-    print(getStr(s.output))
+    print(s.get_vulnerabilities_str())
 
 
 if __name__ == "__main__":

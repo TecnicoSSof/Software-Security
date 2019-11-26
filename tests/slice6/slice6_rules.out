@@ -1,8 +1,4 @@
-{"vulnerability":"lama",
-"source":"t",
+[{"vulnerability":"lama",
+"source":"t,a",
 "sink":"z",
-"sanitizer":""}
-{"vulnerability":"lama",
-"source":"a",
-"sink":"z",
-"sanitizer":""}
+"sanitizer":""}]

@@ -1,16 +1,10 @@
-def getStr(list):
-    toret = ""
-    for x in list:
-        toret += x + "\n"
-    return toret
-
 class Searcher:
 
     def __init__(self, instructions, vulnerabilities):
         self.vulnerabilities = vulnerabilities
         self.declared_variables = list()
         self.current_condition_vars_stack = list()
-        self.output = list()
+        self.output = dict()
 
         for inst in instructions:
             self.handle_instruction(inst)
@@ -47,24 +41,18 @@ class Searcher:
             print("Something went wrong the unsupported type of operation: " + instruction['ast_type'])
 
     def print_vulnerability(self, name, func_name, arg):
-        to_return = '{"vulnerability":"' + name + '",\n' + '"source":"'
-        if arg[1] is not None:
-            to_return = to_return + arg[1]
-        to_return = to_return + "\",\n" + '"sink":"' + func_name + '",\n' + '"sanitizer":"'
-        if arg[2] is not None:
-            to_return = to_return + arg[2]
-        to_return = to_return + '"}'
-        self.output.append(to_return)
-        # print(to_return)
-        # print('{"vulnerability":"', end="")
-        # print(name + '",')
-        # print('"source":"', end="")
-        # print(arg[1] if (arg[1] is not None) else "", end="\",\n")
-        # print('"sink":"', end="")
-        # print(func_name + '",')
-        # print('"sanitizer":"', end="")
-        # print(arg[2] if (arg[2] is not None) else "", end="")
-        # print('"}')
+        if name in self.output:
+            # arg[1] = source
+            if arg[1] is not None and arg[1] not in self.output[name][0]:
+                self.output[name][0].append(arg[1])
+            if func_name not in self.output[name][1]:
+                self.output[name][1].append(func_name)
+            # arg[2] = sanitizer
+            if arg[2] is not None and arg[2] not in self.output[name][2]:
+                self.output[name][2].append(arg[2])
+        else:
+
+            self.output[name] = [[arg[1]] if arg[1] is not None else [], [func_name], [arg[2]] if arg[2] is not None else []]
 
     def handle_expr(self, instruction):
         return self.handle_instruction(instruction['value'])
@@ -233,3 +221,28 @@ class Searcher:
                 for vuln in self.vulnerabilities:
                     if var not in vuln.sinks and var not in vuln.sanitizers:
                         vuln.variables[var] = (True, var, None)
+
+    def get_vulnerabilities_str(self):
+        output_str = "["
+        for key in self.output:
+            output_str += "{\"vulnerability\":\"" + key
+            output_str += "\",\n\"source\":\""
+            for source in self.output[key][0]:
+                output_str += source + ","
+            if len(self.output[key][0]):
+                output_str = output_str[:-1]
+            output_str += "\",\n\"sink\":\""
+            for sink in self.output[key][1]:
+                output_str += sink + ","
+            if len(self.output[key][1]):
+                output_str = output_str[:-1]
+            output_str += "\",\n\"sanitizer\":\""
+            for sanitizer in self.output[key][2]:
+                output_str += sanitizer + ","
+            if len(self.output[key][2]):
+                output_str = output_str[:-1]
+            output_str += "\"},\n"
+        if len(self.output):
+            return output_str[:-2] + "]"
+        else:
+            return ""

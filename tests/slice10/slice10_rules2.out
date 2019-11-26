@@ -1,4 +1,4 @@
-{"vulnerability":"lama",
+[{"vulnerability":"lama",
 "source":"indarg",
 "sink":"s",
-"sanitizer":""}
+"sanitizer":""}]

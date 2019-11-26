@@ -1,7 +1,7 @@
 import os
 import unittest
 from searcher.Vulnerability import Vulnerability
-from searcher.Searcher import Searcher, getStr
+from searcher.Searcher import Searcher
 import json
 
 from static_analyzer import file_get_contents
@@ -15,7 +15,7 @@ class TestSlice11(unittest.TestCase):
         output = open(os.getcwd() + "/tests/slice11/slice11_rules.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_rules2(self):
@@ -24,7 +24,7 @@ class TestSlice11(unittest.TestCase):
         output = open(os.getcwd() + "/tests/slice11/slice11_rules2.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
     def test_rules3(self):
@@ -33,7 +33,7 @@ class TestSlice11(unittest.TestCase):
         output = open(os.getcwd() + "/tests/slice11/slice11_rules3.out", "r")
         vulnerabilities = Vulnerability.build_vulnerabilities(parsed_rules)
         s = Searcher(parsed_snippet['body'], vulnerabilities)
-        self.assertEqual(getStr(s.output), output.read(), "Should be equal")
+        self.assertEqual(s.get_vulnerabilities_str(), output.read(), "Should be equal")
         output.close()
 
 
