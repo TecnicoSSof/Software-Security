@@ -1,6 +1,9 @@
-query_string = 'SELECT * FROM ionosphere'
-from_timestamp = request.args.get('from_timestamp', None)
-new_query_string = '%s AND anomaly_timestamp >= %s' % (query_string, from_timestamp,ssss, ssss)
-query_string = new_query_string
-stmt = query_string
-it = engine.execute(stmt)
+taint = get()
+if taint:
+    x = 1
+elif not taint:
+    mark_safe(escape(taint))
+elif True:
+    x = 2
+else:
+    x = 0
