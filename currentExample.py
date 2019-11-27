@@ -1,9 +1,6 @@
-taint = get()
-if taint:
-    x = 1
-elif not taint:
-    mark_safe(escape(taint))
-elif True:
-    x = 2
-else:
-    x = 0
+o = get()
+x = o
+o = escape(o)
+send_mail_jinja(o)
+send_mail_jinja(request)
+RawSQL(x)

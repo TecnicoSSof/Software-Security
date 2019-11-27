@@ -1,4 +1,4 @@
-{"vulnerability":"SQL injection",
+[{"vulnerability":"SQL injection",
 "source":"request",
 "sink":"execute",
-"sanitizer":"escape_string"}
+"sanitizer":"escape_string"}]
