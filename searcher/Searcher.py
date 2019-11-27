@@ -15,6 +15,8 @@ class Searcher:
             return self.handle_unary_op(instruction)
         elif instruction['ast_type'] == "BinOp":
             return self.handle_bin_op(instruction)
+        elif instruction['ast_type'] == "BoolOp":
+            return self.handle_bool_op(instruction)
         elif instruction['ast_type'] == "Expr":
             return self.handle_expr(instruction)
         elif instruction['ast_type'] == "Name":
@@ -77,6 +79,14 @@ class Searcher:
             to_return = part1
         if part2 is not None:
             to_return.extend(part2)
+        return to_return
+
+    def handle_bool_op(self, instruction):
+        to_return = []
+        for i in range(len(instruction['values'])):
+            current = self.handle_instruction(instruction['values'][i])
+            if current is not None:
+                to_return.extend(current)
         return to_return
 
     def handle_assign(self, instruction):
